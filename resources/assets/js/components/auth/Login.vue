@@ -4,7 +4,7 @@
         <div class="container-fluid p-0">
             <div class="row">
                 <div class="col"></div>
-                <div class="col-md-4 col-lg-3 login-form">
+                <div class="col-md-4 col-lg-4 login-form">
 
                     <div class="sign-in-sign-up-form">
                         <form >
@@ -15,23 +15,33 @@
                                 </div>
                             </div>
 
+
+                            <div class="alertBranch" v-if="alertMessage.length>0">
+                                <div class="alert alert-danger " role="alert">
+                                    {{alertMessage}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="email">Email Address</label>
-                                    <input id="email" type="email" name="email" class="form-control" placeholder="Email Address">
+                                    <input id="email" v-model="email" type="email" name="email" class="form-control" placeholder="Email Address">
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="password">Password</label>
-                                    <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                    <input type="password" v-model="password" name="password" id="password" class="form-control" placeholder="Password">
                                 </div>
                             </div>
 
                             <div class="form-row loginButton">
                                 <div class="form-group col-12">
-                                    <common-submit-button class="btn-block text-center auth-button text-white" buttonText="login"></common-submit-button>
+                                    <common-submit-button v-on:submit="loginPost" :isDisabled="isDisabled" :isActiveText="isActiveText" class="btn-block text-center auth-button text-white" buttonText="login"></common-submit-button>
                                 </div>
                             </div>
 
@@ -57,7 +67,34 @@
 
     export default {
         extends:axiosGetPost,
+
+        data(){
+            return{
+                email:'',
+                password:'',
+                remember:'',
+                isActive:'active',
+                isDisabled:false,
+                isActiveText:false,
+                submitted:false,
+                alertMessage:"",
+            }
+        },
         methods:{
+
+            loginPost(){
+                this.inputFields={
+                    email:this.email,
+                    password:this.password,
+                };
+                this.isDisabled=true;
+                this.isActiveText=true;
+                this.loginPostMethod('/login',{
+                    email:this.email,
+                    password:this.password
+                });
+            },
+
             homePage(){
                 let instance=this;
                 instance.redirect('/');
@@ -65,6 +102,16 @@
             register(){
                 let instance=this;
                 instance.redirect('/register');
+            },
+            loginPostSuccess(response){
+                let instance=this;
+                instance.redirect('/dashboard');
+            },
+            loginPostError(response){
+                let instance=this;
+                instance.isActiveText=false;
+                instance.isDisabled=false;
+                instance.alertMessage=response.data.errors.email[0];
             }
         }
     }

@@ -4,7 +4,7 @@
         <div class="container-fluid p-0">
             <div class="row">
                 <div class="col"></div>
-                <div class="col-md-4 col-lg-3 login-form">
+                <div class=" col-lg-4 col-md-4 login-form">
 
                     <div class="sign-in-sign-up-form">
                         <form >
@@ -16,20 +16,23 @@
                             </div>
 
                             <div class="alertBranch" v-if="alertMessage.length>0">
-                                <div class="alert alert-warning alertBranch" role="alert">
+                                <div class="alert alert-danger " role="alert">
                                     {{alertMessage}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group col-6">
                                     <label for="f_name">First name</label>
-                                    <input id="f_name" v-validate="required" v-model="first_name" type="text" name="first_name" class="form-control" placeholder="John">
+                                    <input id="f_name"  v-model="first_name" type="text" name="first_name" class="form-control" placeholder="John">
                                     <small class="text-danger" v-show="errors.has('first_name')">{{errors.first('first_name')}}</small>
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="l_name">Last name</label>
-                                    <input id="l_name" v-validate="required" v-model="last_name" type="text" name="last_name" class="form-control" placeholder="Doe">
+                                    <input id="l_name"  v-model="last_name" type="text" name="last_name" class="form-control" placeholder="Doe">
                                 </div>
                             </div>
 
@@ -37,21 +40,21 @@
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="email">Email Address</label>
-                                    <input id="email" v-validate="required" v-model="email" type="email" name="email" class="form-control" placeholder="Email Address">
+                                    <input id="email"  v-model="email" type="email" name="email" class="form-control" placeholder="Email Address">
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="password">Password</label>
-                                    <input type="password" v-validate v-model="password" name="password" id="password" class="form-control" placeholder="Password">
+                                    <input type="password" v-model="password" name="password" id="password" class="form-control" placeholder="Password">
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="password_confirmation">Confirmation Password</label>
-                                    <input type="password" v-validate="'required|confirmed:password'" v-model="password_confirmation" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirmation Password">
+                                    <input type="password" v-model="password_confirmation" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirmation Password">
                                 </div>
                             </div>
 
@@ -86,6 +89,7 @@
 
     export default {
         extends:axiosGetPost,
+        props:["emailAdd","token"],
         data(){
             return {
                 first_name:'',
@@ -99,13 +103,13 @@
                 alertMessage:'',
             }
         },
+
         methods:{
             registersPost(){
                 let instance=this;
                 this.submitted=true;
                 this.$validator.validateAll().then((result)=>{
                     if(result){
-                        console.log('clicked');
                         this.inputFields={
                             first_name:this.first_name,
                             last_name:this.last_name,
@@ -115,27 +119,25 @@
                         instance.isDisabled=true;
                         instance.isActiveText=true;
 
-                        if(instance.emailAdd && instance.token){
-                            instance.axiosPost('/register/'+instance.token,{
+                        instance.loginAxiosPost('/register',{
                                 first_name:this.first_name,
                                 last_name:this.last_name,
                                 email: this.email,
                                 password:this.password,
                                 password_confirmation:this.password_confirmation,
-                            },function (response) {
-                                if(response){
+                            },
+                            function (response) {
+                                if(response.data.message){
                                     instance.alertMessage=response.data.message;
                                 }
+                                instance.isDisabled=false;
+
                                 instance.login();
 
-                            },function (error) {
-                                instance.errors=error.data.errors;
-
-                            })
-                        }
-                        else{
-                            alert('here');
-                        }
+                            },
+                            function (error) {
+                                instance.alertMessage=error.data.message;
+                            });
                     }
                 })
 
@@ -155,6 +157,6 @@
 <style scoped>
     .login-form{
         background: white;
-        margin-top:10%;
+        margin-top:2%;
     }
 </style>

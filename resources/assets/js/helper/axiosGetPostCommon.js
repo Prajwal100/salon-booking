@@ -85,7 +85,7 @@ export default {
             instance.loginAxiosPost(route, fields,
                 function (response) {
                     instance.setPreLoader(true);
-                    instance.loginPostSucces(response);
+                    instance.loginPostSuccess(response);
                 },
                 function (error) {
                     instance.setPreLoader(true);

@@ -1929,10 +1929,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   "extends": _helper_axiosGetPostCommon__WEBPACK_IMPORTED_MODULE_0__.default,
+  data: function data() {
+    return {
+      email: '',
+      password: '',
+      remember: '',
+      isActive: 'active',
+      isDisabled: false,
+      isActiveText: false,
+      submitted: false,
+      alertMessage: ""
+    };
+  },
   methods: {
+    loginPost: function loginPost() {
+      this.inputFields = {
+        email: this.email,
+        password: this.password
+      };
+      this.isDisabled = true;
+      this.isActiveText = true;
+      this.loginPostMethod('/login', {
+        email: this.email,
+        password: this.password
+      });
+    },
     homePage: function homePage() {
       var instance = this;
       instance.redirect('/');
@@ -1940,6 +1974,16 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var instance = this;
       instance.redirect('/register');
+    },
+    loginPostSuccess: function loginPostSuccess(response) {
+      var instance = this;
+      instance.redirect('/dashboard');
+    },
+    loginPostError: function loginPostError(response) {
+      var instance = this;
+      instance.isActiveText = false;
+      instance.isDisabled = false;
+      instance.alertMessage = response.data.errors.email[0];
     }
   }
 });
@@ -2039,10 +2083,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   "extends": _helper_axiosGetPostCommon__WEBPACK_IMPORTED_MODULE_0__.default,
+  props: ["emailAdd", "token"],
   data: function data() {
     return {
       first_name: '',
@@ -2064,7 +2112,6 @@ __webpack_require__.r(__webpack_exports__);
       this.submitted = true;
       this.$validator.validateAll().then(function (result) {
         if (result) {
-          console.log('clicked');
           _this.inputFields = {
             first_name: _this.first_name,
             last_name: _this.last_name,
@@ -2073,26 +2120,22 @@ __webpack_require__.r(__webpack_exports__);
           };
           instance.isDisabled = true;
           instance.isActiveText = true;
+          instance.loginAxiosPost('/register', {
+            first_name: _this.first_name,
+            last_name: _this.last_name,
+            email: _this.email,
+            password: _this.password,
+            password_confirmation: _this.password_confirmation
+          }, function (response) {
+            if (response.data.message) {
+              instance.alertMessage = response.data.message;
+            }
 
-          if (instance.emailAdd && instance.token) {
-            instance.axiosPost('/register/' + instance.token, {
-              first_name: _this.first_name,
-              last_name: _this.last_name,
-              email: _this.email,
-              password: _this.password,
-              password_confirmation: _this.password_confirmation
-            }, function (response) {
-              if (response) {
-                instance.alertMessage = response.data.message;
-              }
-
-              instance.login();
-            }, function (error) {
-              instance.errors = error.data.errors;
-            });
-          } else {
-            alert('here');
-          }
+            instance.isDisabled = false;
+            instance.login();
+          }, function (error) {
+            instance.alertMessage = error.data.message;
+          });
         }
       });
     },
@@ -2307,7 +2350,7 @@ __webpack_require__.r(__webpack_exports__);
       instance.setPreLoader(false);
       instance.loginAxiosPost(route, fields, function (response) {
         instance.setPreLoader(true);
-        instance.loginPostSucces(response);
+        instance.loginPostSuccess(response);
       }, function (error) {
         instance.setPreLoader(true);
         instance.loginPostError(error);
@@ -7283,7 +7326,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.login-form[data-v-5f3035c3]{\n    background: white;\n    margin-top:10%;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.login-form[data-v-5f3035c3]{\n    background: white;\n    margin-top:2%;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50068,14 +50111,100 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col" }),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-4 col-lg-3 login-form" }, [
+        _c("div", { staticClass: "col-md-4 col-lg-4 login-form" }, [
           _c("div", { staticClass: "sign-in-sign-up-form" }, [
             _c("form", [
               _vm._m(0),
               _vm._v(" "),
-              _vm._m(1),
+              _vm.alertMessage.length > 0
+                ? _c("div", { staticClass: "alertBranch" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger ",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(_vm.alertMessage) +
+                            "\n                                "
+                        ),
+                        _vm._m(1)
+                      ]
+                    )
+                  ])
+                : _vm._e(),
               _vm._v(" "),
-              _vm._m(2),
+              _c("div", { staticClass: "form-row" }, [
+                _c("div", { staticClass: "form-group col-12" }, [
+                  _c("label", { attrs: { for: "email" } }, [
+                    _vm._v("Email Address")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.email,
+                        expression: "email"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "email",
+                      type: "email",
+                      name: "email",
+                      placeholder: "Email Address"
+                    },
+                    domProps: { value: _vm.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.email = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-row" }, [
+                _c("div", { staticClass: "form-group col-12" }, [
+                  _c("label", { attrs: { for: "password" } }, [
+                    _vm._v("Password")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.password,
+                        expression: "password"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "password",
+                      name: "password",
+                      id: "password",
+                      placeholder: "Password"
+                    },
+                    domProps: { value: _vm.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.password = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-row loginButton" }, [
                 _c(
@@ -50085,7 +50214,12 @@ var render = function() {
                     _c("common-submit-button", {
                       staticClass:
                         "btn-block text-center auth-button text-white",
-                      attrs: { buttonText: "login" }
+                      attrs: {
+                        isDisabled: _vm.isDisabled,
+                        isActiveText: _vm.isActiveText,
+                        buttonText: "login"
+                      },
+                      on: { submit: _vm.loginPost }
                     })
                   ],
                   1
@@ -50150,41 +50284,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group col-12" }, [
-        _c("label", { attrs: { for: "email" } }, [_vm._v("Email Address")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            id: "email",
-            type: "email",
-            name: "email",
-            placeholder: "Email Address"
-          }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group col-12" }, [
-        _c("label", { attrs: { for: "password" } }, [_vm._v("Password")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "password",
-            name: "password",
-            id: "password",
-            placeholder: "Password"
-          }
-        })
-      ])
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
@@ -50214,7 +50325,7 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col" }),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-4 col-lg-3 login-form" }, [
+        _c("div", { staticClass: " col-lg-4 col-md-4 login-form" }, [
           _c("div", { staticClass: "sign-in-sign-up-form" }, [
             _c("form", [
               _vm._m(0),
@@ -50224,15 +50335,16 @@ var render = function() {
                     _c(
                       "div",
                       {
-                        staticClass: "alert alert-warning alertBranch",
+                        staticClass: "alert alert-danger ",
                         attrs: { role: "alert" }
                       },
                       [
                         _vm._v(
                           "\n                                " +
                             _vm._s(_vm.alertMessage) +
-                            "\n                            "
-                        )
+                            "\n                                "
+                        ),
+                        _vm._m(1)
                       ]
                     )
                   ])
@@ -50246,12 +50358,6 @@ var render = function() {
                   _vm._v(" "),
                   _c("input", {
                     directives: [
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: _vm.required,
-                        expression: "required"
-                      },
                       {
                         name: "model",
                         rawName: "v-model",
@@ -50302,12 +50408,6 @@ var render = function() {
                   _c("input", {
                     directives: [
                       {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: _vm.required,
-                        expression: "required"
-                      },
-                      {
                         name: "model",
                         rawName: "v-model",
                         value: _vm.last_name,
@@ -50343,12 +50443,6 @@ var render = function() {
                   _c("input", {
                     directives: [
                       {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: _vm.required,
-                        expression: "required"
-                      },
-                      {
                         name: "model",
                         rawName: "v-model",
                         value: _vm.email,
@@ -50383,7 +50477,6 @@ var render = function() {
                   _vm._v(" "),
                   _c("input", {
                     directives: [
-                      { name: "validate", rawName: "v-validate" },
                       {
                         name: "model",
                         rawName: "v-model",
@@ -50419,12 +50512,6 @@ var render = function() {
                   _vm._v(" "),
                   _c("input", {
                     directives: [
-                      {
-                        name: "validate",
-                        rawName: "v-validate",
-                        value: "required|confirmed:password",
-                        expression: "'required|confirmed:password'"
-                      },
                       {
                         name: "model",
                         rawName: "v-model",
@@ -50518,6 +50605,23 @@ var staticRenderFns = [
         )
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true

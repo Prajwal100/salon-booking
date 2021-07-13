@@ -29,7 +29,6 @@ class CreateUsersTable extends Migration
             $table->integer('role_id')->default(0);
             $table->tinyInteger('disabled')->default(0);
             $table->string('token', 254)->nullable();   // confirm_token', 100
-            $table->string('verification_code');
             $table->dateTime('notification_check')->nullable();
             $table->rememberToken();
             $table->timestamps();
