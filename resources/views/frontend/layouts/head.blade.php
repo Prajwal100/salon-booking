@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
+    {{-- line-awesome   --}}
+    <link rel="stylesheet" href="{{asset('line-awesome/css/line-awesome.min.css')}}">
+
     <!--Import style.css-->
     <link href='{{asset('css/app.css')}}' rel='stylesheet'>
 

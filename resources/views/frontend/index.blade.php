@@ -1,5 +1,5 @@
 @extends('frontend.layouts.master')
 
 @section('content')
-    <login></login>
+    <example-component></example-component>
 @endsection
