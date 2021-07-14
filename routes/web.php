@@ -18,3 +18,6 @@ Route::get('/', [\App\Http\Controllers\Frontend\IndexController::class,'home'])-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//backend dashboard
+require __DIR__ . '/backend.php';

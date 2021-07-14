@@ -1,8 +1,34 @@
 //lato
 @import url('fonts/Lato/lato.css');
 
-//main layouts
+
+// Navbar Custom
+@import "includes/NavbarCustom.scss";
+
+// Tabs Custom
+@import "includes/TabsCustom.scss";
+
+// Sidebar
+@import "includes/Sidebar.scss";
+
+// Main Layout
 @import "includes/MainLayout.scss";
+
+//Customized Bootstrap Classes
+@import "includes/CustomizedBootstrapClass";
+
+//Settings Index
+@import "pages/Settings.scss";
+
+//Pages
+@import "pages/Profile";
+@import "pages/Dashboard";
+@import "pages/Booking";
+
+@import "custom/popover/popover";
+@import "custom/Customer & Suppelier/customerSupplier.scss";
+@import "custom/dateRangePicker.scss";
+@import "includes/CommonUse.scss";
 
 
 // Booking old css

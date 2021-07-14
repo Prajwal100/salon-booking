@@ -11,6 +11,7 @@ Vue.use(Vuelidate);
 
 //Vue toasted msg
 import  Toasted from 'vue-toasted';
+import {req} from "vuelidate/lib/validators/common";
 
 Vue.use(Toasted);
 
@@ -52,6 +53,16 @@ Vue.component('login-form',require('./components/auth/Login').default);
 
 //Register
 Vue.component('register-form',require('./components/auth/Register').default);
+
+//Dashboard
+Vue.component('dashboard',require('./components/Dashboard/Dashboard').default);
+
+//Navbar
+Vue.component('nav-bar',require('./components/include/Navbar').default);
+
+//sidebar
+Vue.component('side-bar',require('./components/include/Sidebar').default);
+
 
 //custom components
 Vue.component('common-submit-button',require('./components/CommonComponents/submitButton').default);
