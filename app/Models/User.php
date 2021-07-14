@@ -38,4 +38,36 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+    public static function getAllClients($request)
+    {
+
+        $searchValue = $request->searchValue;
+
+        $query =  User::leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->where('role_id', '=', 0)
+            ->where('is_admin', '=', 0)
+            ->select('users.id as id', 'users.first_name', 'users.last_name', 'users.email', 'users.phone');
+
+        if (!empty($searchValue)) {
+            $query->where(function ($query) use ($searchValue) {
+                $query->where('users.first_name', 'LIKE', '%' . $searchValue . '%')
+                    ->orWhere('users.last_name', 'LIKE', '%' . $searchValue . '%')
+                    ->orWhere('users.phone', 'LIKE', '%' . $searchValue . '%');
+            });
+        }
+
+        if (empty($requestType)) {
+
+            $count = $query->get()->count();
+            $allData = $query->get();
+            //$data = $query->orderBy($request->columnKey, $request->columnSortedBy)->take($request->rowLimit)->skip($request->rowOffset)->get();
+
+            return ['datarows' => $allData, 'count' => $count];
+        } else {
+            return $query->orderBy($request->columnKey, $request->columnSortedBy)->get();
+        }
+    }
 }

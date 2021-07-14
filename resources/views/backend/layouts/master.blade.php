@@ -1,11 +1,11 @@
-@include('frontend.layouts.head')
+@include('backend.layouts.head')
 <body>
 
 @inject('appConfig','App\Http\Controllers\Controller')
     <div id="app">
         @include('backend.layouts.navbar')
         @include('backend.layouts.sidebar')
-        <main id="app">
+        <main >
             @yield('content')
         </main>
     </div>
@@ -15,4 +15,4 @@
             appUrl:"{{$appConfig->appUrl}}",
         }
     </script>
-@include('frontend.layouts.footer')
+@include('backend.layouts.footer')

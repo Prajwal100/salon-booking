@@ -1,1 +1,3 @@
-<side-bar></side-bar>
+<side-bar route="services=0">
+
+</side-bar>

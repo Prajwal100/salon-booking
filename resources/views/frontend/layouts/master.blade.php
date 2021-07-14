@@ -3,7 +3,9 @@
 
 @inject('appConfig','App\Http\Controllers\Controller')
     <div id="app">
-        @yield('content')
+        <main id="app">
+            @yield('content')
+        </main>
     </div>
 
     <script>

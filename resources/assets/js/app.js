@@ -63,9 +63,18 @@ Vue.component('nav-bar',require('./components/include/Navbar').default);
 //sidebar
 Vue.component('side-bar',require('./components/include/Sidebar').default);
 
+//services
+Vue.component('service-index',require('./components/service/Index').default);
+
+//clients
+Vue.component('client-index',require('./components/client/Index').default);
+
 
 //custom components
 Vue.component('common-submit-button',require('./components/CommonComponents/submitButton').default);
+
+//Datatable components
+Vue.component('datatable-component',require('./components/datatable/Datatable').default);
 const app = new Vue({
     el: '#app',
 });
